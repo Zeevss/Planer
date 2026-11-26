@@ -1,3 +1,4 @@
+import { PaperSelect, categoryOptions, levelOptions } from "./PaperSelect";
 import { useCallback, useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import {
@@ -32,7 +33,6 @@ import {
   fmt,
   newTask,
   monday,
-  levels,
   endTimer,
   idle,
   shortDate,
@@ -380,37 +380,28 @@ function App() {
                       onChange={(e) => setQuery(e.target.value)}
                     />
                   </label>
-                  <select
-                    aria-label="Категория"
+                  <PaperSelect
+                    label="Категория"
                     value={cat}
-                    onChange={(e) => setCat(e.target.value)}
-                  >
-                    <option value="">Все категории</option>
-                    {book.cats.map((c) => (
-                      <option key={c.id} value={c.id}>
-                        {c.name}
-                      </option>
-                    ))}
-                  </select>
-                  <select
-                    aria-label="Сложность"
+                    onChange={setCat}
+                    options={categoryOptions(book.cats, "Все категории")}
+                  />
+                  <PaperSelect
+                    label="Сложность"
                     value={level}
-                    onChange={(e) => setLevel(e.target.value)}
-                  >
-                    <option value="">Любая сложность</option>
-                    {levels.map((l) => (
-                      <option key={l}>{l}</option>
-                    ))}
-                  </select>
-                  <select
-                    aria-label="Планирование"
+                    onChange={setLevel}
+                    options={levelOptions("Любая сложность")}
+                  />
+                  <PaperSelect
+                    label="Планирование"
                     value={dates}
-                    onChange={(e) => setDates(e.target.value)}
-                  >
-                    <option value="">Любая дата</option>
-                    <option value="none">Без даты</option>
-                    <option value="set">С датой</option>
-                  </select>
+                    onChange={setDates}
+                    options={[
+                      { value: "", label: "Любая дата" },
+                      { value: "none", label: "Без даты" },
+                      { value: "set", label: "С датой" },
+                    ]}
+                  />
                 </div>
                 <TaskList
                   all

@@ -1,3 +1,4 @@
+import { PaperSelect } from "./PaperSelect";
 import { useEffect, useState } from "react";
 import { Timer as TimerIcon, Play, Pause, Square, Coffee } from "lucide-react";
 import {
@@ -150,28 +151,24 @@ export function Focus({
             </small>
           </div>
         </div>
-        <select
+        <PaperSelect
           className="focus-select"
           disabled={t.active || t.mode === "break"}
+          label="Задача для фокуса"
           value={target ? t.task : ""}
-          aria-label="Задача для фокуса"
-          onChange={(e) => {
-            const task = e.currentTarget.value;
+          onChange={(task) =>
             void update((b) => {
               if (!b.timer.active) b.timer.task = task;
-            });
-          }}
-        >
-          <option value="">Свободный фокус</option>
-          {book.tasks
-            .filter((s) => !s.done || s.id === t.task)
-            .sort((a, b) => Number(b.day === day) - Number(a.day === day))
-            .map((s) => (
-              <option key={s.id} value={s.id}>
-                {s.title}
-              </option>
-            ))}
-        </select>
+            })
+          }
+          options={[
+            { value: "", label: "Свободный фокус" },
+            ...book.tasks
+              .filter((s) => !s.done || s.id === t.task)
+              .sort((a, b) => Number(b.day === day) - Number(a.day === day))
+              .map((s) => ({ value: s.id, label: s.title })),
+          ]}
+        />
         {target?.resume && <p className="resume-note">{target.resume}</p>}
         <div className="timer-actions">
           <button className="primary" onClick={() => void toggle()}>

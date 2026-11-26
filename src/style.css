@@ -803,7 +803,7 @@ h2,
 .filterbar > * {
   min-width: 110px;
 }
-.filterbar select,
+.filterbar .paper-select,
 .search {
   background: var(--paper);
   border: 1px solid var(--line);
@@ -908,7 +908,7 @@ dialog label {
 }
 dialog input,
 dialog textarea,
-dialog select {
+dialog .paper-select {
   width: 100%;
   min-width: 0;
   border: 1px solid #c9d0bf;
@@ -989,7 +989,7 @@ legend {
 .rollover span {
   overflow-wrap: anywhere;
 }
-.rollover select,
+.rollover .paper-select,
 .rollover input {
   font-size: 11px;
   padding: 5px;
@@ -1196,4 +1196,85 @@ body::after {
 }
 .plan-snapshot li {
   margin: 5px 0;
+}
+
+.paper-select {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 7px;
+  max-width: 100%;
+  text-align: left;
+}
+.paper-select > span:first-of-type {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.paper-select > svg {
+  color: #64755c;
+  transition: transform 0.15s ease;
+}
+.paper-select[data-state="open"] > svg {
+  transform: rotate(180deg);
+}
+.paper-select:hover:not(:disabled),
+.paper-select[data-state="open"] {
+  border-color: #87997c;
+}
+.paper-options {
+  z-index: 20;
+  min-width: min(
+    var(--radix-select-trigger-width),
+    var(--radix-select-content-available-width)
+  );
+  max-width: min(32rem, var(--radix-select-content-available-width));
+  max-height: min(19rem, var(--radix-select-content-available-height));
+  overflow: hidden;
+  padding: 4px;
+  background: var(--paper);
+  color: var(--ink);
+  border: 1px solid #a9b49d;
+  border-radius: 6px 8px 7px 5px;
+  box-shadow:
+    1px 3px 0 #5160441a,
+    0 8px 20px #35452d18;
+  animation: rise 0.12s ease-out;
+}
+.paper-option {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 30px 8px 10px;
+  border-radius: 4px;
+  font-size: 13px;
+  overflow-wrap: anywhere;
+  cursor: pointer;
+  user-select: none;
+}
+.paper-option[data-state="checked"] {
+  color: var(--forest);
+  font-weight: 580;
+}
+.paper-option[data-highlighted] {
+  background: #e3ead9;
+  outline: none;
+}
+.option-check {
+  position: absolute;
+  right: 8px;
+  display: flex;
+}
+.option-dot {
+  width: 8px;
+  height: 8px;
+  flex: none;
+  border-radius: 46% 54% 47% 53%;
+}
+.option-scroll {
+  display: grid;
+  place-items: center;
+  color: #61795a;
 }

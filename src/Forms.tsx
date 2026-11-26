@@ -1,9 +1,9 @@
+import { PaperSelect, categoryOptions, levelOptions } from "./PaperSelect";
 import { useState } from "react";
 import { Check, Plus, Trash2, ArrowRight, Clock3 } from "lucide-react";
 import { Modal, type Update } from "./shared";
 import {
   colors,
-  levels,
   uid,
   newTask,
   shift,
@@ -84,29 +84,21 @@ export function TaskForm({
         <div className="fields">
           <label>
             Категория
-            <select
+            <PaperSelect
+              label="Категория"
               value={t.cat}
-              onChange={(e) => field("cat", e.target.value)}
-            >
-              <option value="">Без категории</option>
-              {book.cats.map((c) => (
-                <option key={c.id} value={c.id}>
-                  {c.name}
-                </option>
-              ))}
-            </select>
+              onChange={(v) => field("cat", v)}
+              options={categoryOptions(book.cats, "Без категории")}
+            />
           </label>
           <label>
             Сложность
-            <select
+            <PaperSelect
+              label="Сложность"
               value={t.level}
-              onChange={(e) => field("level", e.target.value)}
-            >
-              <option value="">Без оценки</option>
-              {levels.map((v) => (
-                <option key={v}>{v}</option>
-              ))}
-            </select>
+              onChange={(v) => field("level", v)}
+              options={levelOptions("Без оценки")}
+            />
           </label>
         </div>
         {t.parent && !exists && (
@@ -395,23 +387,25 @@ export function Reflection({
               .map((t) => (
                 <div className="rollover" key={t.id}>
                   <span>{t.title}</span>
-                  <select
-                    aria-label={"Перенос " + t.title}
+                  <PaperSelect
+                    label={"Перенос " + t.title}
                     value={moves[t.id] ?? day}
-                    onChange={(e) =>
-                      setMoves({ ...moves, [t.id]: e.target.value })
-                    }
-                  >
-                    <option value={day}>Оставить</option>
-                    <option value={shift(day, 1)}>На завтра</option>
-                    <option value="">Без даты</option>
-                    {moves[t.id] &&
-                      ![day, shift(day, 1)].includes(moves[t.id]) && (
-                        <option value={moves[t.id]}>
-                          {shortDate(moves[t.id])}
-                        </option>
-                      )}
-                  </select>
+                    onChange={(v) => setMoves({ ...moves, [t.id]: v })}
+                    options={[
+                      { value: day, label: "Оставить" },
+                      { value: shift(day, 1), label: "На завтра" },
+                      { value: "", label: "Без даты" },
+                      ...(moves[t.id] &&
+                      ![day, shift(day, 1)].includes(moves[t.id])
+                        ? [
+                            {
+                              value: moves[t.id],
+                              label: shortDate(moves[t.id]),
+                            },
+                          ]
+                        : []),
+                    ]}
+                  />
                   <input
                     type="date"
                     aria-label="Выбрать день переноса"
@@ -427,16 +421,17 @@ export function Reflection({
         {Object.values(moves).includes(shift(day, 1)) && (
           <label>
             Первой на завтра
-            <select value={first} onChange={(e) => setFirst(e.target.value)}>
-              <option value="">Сохранить порядок</option>
-              {plan
-                .filter((t) => moves[t.id] === shift(day, 1))
-                .map((t) => (
-                  <option key={t.id} value={t.id}>
-                    {t.title}
-                  </option>
-                ))}
-            </select>
+            <PaperSelect
+              label="Первой на завтра"
+              value={moves[first] === shift(day, 1) ? first : ""}
+              onChange={setFirst}
+              options={[
+                { value: "", label: "Сохранить порядок" },
+                ...plan
+                  .filter((t) => moves[t.id] === shift(day, 1))
+                  .map((t) => ({ value: t.id, label: t.title })),
+              ]}
+            />
           </label>
         )}
         <footer>
